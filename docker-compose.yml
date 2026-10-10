@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: geo-measure-api
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=sqlite:///./uploads/geo_measure.db
+      - STORAGE_DIR=/app/uploads
+      - MAX_UPLOAD_MB=50
+      - DIFF_THRESHOLD_PCT=0.5
+      - LOG_LEVEL=INFO
+    volumes:
+      - uploads_data:/app/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Optional Postgres service for production scaling
+  db:
+    image: postgres:16-alpine
+    container_name: geo-measure-db
+    environment:
+      POSTGRES_DB: geo_measure
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    profiles:
+      - with-db
+
+volumes:
+  uploads_data:
+  postgres_data:
