@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "geo-measure-api"
+version = "1.0.0"
+description = "Geospatial File Measurement API: robust reprojection and geodesic measurements"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "Aereo Engineering" }
+]
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.28.0",
+    "geopandas>=1.0.0",
+    "pyogrio>=0.9.0",
+    "shapely>=2.0.0",
+    "pyproj>=3.6.0",
+    "sqlalchemy>=2.0.0",
+    "pydantic>=2.6.0",
+    "python-multipart>=0.0.9",
+    "defusedxml>=0.7.1",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "httpx>=0.27.0",
+    "ruff>=0.4.0",
+    "mypy>=1.9.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
